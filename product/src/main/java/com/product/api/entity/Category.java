@@ -1,17 +1,30 @@
 package com.product.api.entity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 
 @Entity
 @Table(name = "category")
 public class Category {
-
+	
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	// Con las siguientes 2 etiquetas se especifica mas el valor de las columnas en 
+	// la base de datos .
+	@JsonProperty("category_id")
+	@Column(name = "category_id")
     private Integer category_id;
 	
+	@JsonProperty("category")
+	@Column(name = "category")
 	private String category;
+	@JsonProperty("tag")
+	@Column(name = "tag")
 	private String tag;
+	@JsonProperty("status")
+	@Column(name = "status")
 	private Integer status=1;
 
 	// Es necesario que tenga una constructor por defecto 
