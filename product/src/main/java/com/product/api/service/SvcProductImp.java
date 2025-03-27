@@ -12,7 +12,9 @@ import com.product.api.dto.in.DtoProductIn;
 import com.product.api.dto.out.DtoProductListOut;
 import com.product.api.dto.out.DtoProductOut;
 import com.product.api.entity.Product;
+import com.product.api.entity.ProductImage;
 import com.product.api.repository.RepoProduct;
+import com.product.api.repository.RepoProductImage;
 import com.product.common.dto.ApiResponse;
 import com.product.common.mapper.MapperProduct;
 import com.product.exception.ApiException;
@@ -21,8 +23,12 @@ import com.product.exception.ApiException;
 @Service
 public class SvcProductImp implements SvcProduct{
 	
+	
+	//Autowired para inyectar dependencias
 	@Autowired
 	RepoProduct repo;
+	@Autowired
+	RepoProductImage repoProductImage;
 	
 	@Autowired
 	MapperProduct mapper;
@@ -54,8 +60,23 @@ public class SvcProductImp implements SvcProduct{
 	@Override
 	public ResponseEntity<ApiResponse> createProduct(DtoProductIn in) {
 		try {
+			
+			
 			Product product = mapper.fromDto(in);
 			repo.save(product);
+			
+			
+			//Se va a crear una instancia de ProductImage , 
+			//para crear un registro de cuando se cree un producto
+			
+			
+			ProductImage productImage = new ProductImage();
+			productImage.setProduct_id(product.getProduct_id());
+			productImage.setImage("");
+			productImage.setStatus(1);
+			repoProductImage.save(productImage);
+			
+			
 			return new ResponseEntity<>(new ApiResponse("El producto ha sido registrado"), HttpStatus.CREATED);
 		}catch (DataAccessException e) {
 			if (e.getLocalizedMessage().contains("ux_product_gtin"))
