@@ -1,13 +1,4 @@
 package com.product.api.controller;
-import com.product.Almacen;
-import com.product.api.dto.DtoCategoryIn;
-import com.product.api.entity.Category;
-import com.product.api.service.SvcCategory;
-import com.product.api.service.SvcCategoryImp;
-import com.product.common.ApiResponse;
-import com.product.exception.ApiException;
-
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,73 +15,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.product.api.dto.in.DtoProductIn;
+import com.product.api.dto.out.DtoProductListOut;
+import com.product.api.dto.out.DtoProductOut;
+import com.product.api.service.SvcProduct;
+import com.product.common.dto.ApiResponse;
+import com.product.exception.ApiException;
 
+import jakarta.validation.Valid;
 
-
-//http://localhost:8080/category
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/product")
 public class CtrlProduct {
-	
-	
+
 	@Autowired
-	SvcCategory svc;
-	
+	SvcProduct svc;
+
 	@GetMapping
-	public ResponseEntity<List<Category>> getCategories() {
-		
-		return svc.getCategories();
+	public ResponseEntity<List<DtoProductListOut>> getProducts() {
+		return svc.getProducts();
 	}
-	
-	
-	@GetMapping("/active")
-	public ResponseEntity<List<Category>> getActiveCategorites() {
-		return svc.getActiveCategories();
-	}
-	
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Category> getCategory(@PathVariable Integer id) {
-		return svc.getCategory(id);
+	public ResponseEntity<DtoProductOut> getProduct(@PathVariable Integer id) {
+		return svc.getProduct(id);
 	}
 
-	
-	
-	
-	// Para poner aprueba los siguiente endpoint requiero usar Postman o ThunderClient de VS
-	// La forma de pasarle los parametros es mediante JSON 
-	// Por ejemplo 
-	/*
-	 * {
-    	"category": "Tecnologíaaaaa",
-    	"tag": "Gadgetsssssss"
-		}
-	 * */
-	
 	@PostMapping
-	public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody DtoCategoryIn in, BindingResult bindingResult) {
+	public ResponseEntity<ApiResponse> createProduct(@Valid @RequestBody DtoProductIn in, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
 			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
 
-		return svc.createCategory(in);
+		return svc.createProduct(in);
 	}
-	
-	
-	// En base a un id modemos modificar los valores de category
+
 	@PutMapping("/{id}")
-	public ResponseEntity<ApiResponse> update(@PathVariable Integer id, @Valid @RequestBody DtoCategoryIn in,BindingResult bindingResult) {
+	public ResponseEntity<ApiResponse> updateProduct(@PathVariable Integer id, @Valid @RequestBody DtoProductIn in,
+			BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
 			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
 
-		return svc.updateCategory(in,id);
+		return svc.updateProduct(id, in);
 	}
-	
-	
-	
+
+	@PatchMapping("/{id}/enable")
+	public ResponseEntity<ApiResponse> enableProduct(@PathVariable Integer id) {
+		return svc.enableProduct(id);
+	}
+
 	@PatchMapping("/{id}/disable")
-	public ResponseEntity<ApiResponse> disableCategory(@PathVariable Integer id) {
-		return svc.disableCategory(id);
+	public ResponseEntity<ApiResponse> disableProduct(@PathVariable Integer id) {
+		return svc.disableProduct(id);
 	}
-	
-	
 }

@@ -69,7 +69,15 @@
 		<!--	<version>3.4.2</version> -->
 		
 		
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		
+		
+		
+		<!--Terminan las dependencias-->
 		</dependencies>
 	
 

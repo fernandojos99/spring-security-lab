@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.product.api.dto.DtoCategoryIn;
 import com.product.api.entity.Category;
-import com.product.common.ApiResponse;
+import com.product.common.dto.ApiResponse;
 
 /*
  * Como buenas prácticas, para crear un servicio 
