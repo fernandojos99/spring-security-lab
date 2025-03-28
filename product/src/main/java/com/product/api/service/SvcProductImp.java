@@ -1,8 +1,14 @@
 package com.product.api.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +26,8 @@ import com.product.common.mapper.MapperProduct;
 import com.product.exception.ApiException;
 //import com.product.exception.DBAccessException;
 
+
+
 @Service
 public class SvcProductImp implements SvcProduct{
 	
@@ -32,6 +40,10 @@ public class SvcProductImp implements SvcProduct{
 	
 	@Autowired
 	MapperProduct mapper;
+	
+	
+	@Value("${app.upload.dir}")
+	private String uploadDir;
 
 	@Override
 	public ResponseEntity<List<DtoProductListOut>> getProducts() {
@@ -45,12 +57,24 @@ public class SvcProductImp implements SvcProduct{
 		}
 	}
 
+	//punto 3 del pdf11
 	@Override
 	public ResponseEntity<DtoProductOut> getProduct(Integer id) {
 		try {
-			validateProductId(id);
+			//validateProductId(id);
 			
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			DtoProductOut product = repo.getProduct(id);
+			if(product == null )
+				throw new ApiException(HttpStatus.NOT_FOUND, "El id del cliente no existe");
+			
+			String image = readProductImageFile(id);
+			product.setImage(image);
+			
+			return new ResponseEntity<>(product, HttpStatus.OK);
+			
+			
+		//Esto se enviaba al inicio de la practica
+		//	return new ResponseEntity<>(null, HttpStatus.OK);
 		}catch (DataAccessException e) {
 			//throw new DBAccessException(e);
 			throw new ApiException(HttpStatus.NOT_FOUND, "El id de categoría no existe");
@@ -149,5 +173,47 @@ public class SvcProductImp implements SvcProduct{
 			throw new ApiException(HttpStatus.NOT_FOUND, "El id de categoría no existe");
 		}
 	}
+	
+	
+	
+	
+	private String readProductImageFile(Integer product_id) {
+	    try {
+		ProductImage productImage = repoProductImage.findByProduct_id(product_id);
+		if(productImage == null)
+			return "";
+		
+		String imageUrl = productImage.getImage();
+		
+		// Si la URL comienza con "/" la eliminamos para obtener la ruta relativa
+	  	 if (imageUrl.startsWith("/")) {
+	       	    imageUrl = imageUrl.substring(1);
+	   	}
+	  
+	  	 // Construir el Path
+	  	 Path imagePath = Paths.get(uploadDir, imageUrl);
+	  
+	  	 // Verifica que el archivo exista
+	   	if (!Files.exists(imagePath))
+	   	    return "";
+	  
+	// Leer los bytes de la imagen y codificarlos a Base64
+	byte[] imageBytes = Files.readAllBytes(imagePath);
+	return Base64.getEncoder().encodeToString(imageBytes);
+	    
+	    }catch (DataAccessException e) {
+	    	//throw new DBAccessException(e);
+	    	throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al leer el archivo");
+	    }catch (IOException e) {
+	    	throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al leer el archivo");
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }
