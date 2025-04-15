@@ -33,8 +33,6 @@ public class DtoProductOut {
 	
 	
 	
-	
-	
 	public String getGtin() {
 		return gtin;
 	}
