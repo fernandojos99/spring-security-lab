@@ -1,9 +1,11 @@
 package com.product.api.controller;
 import com.product.Almacen;
 import com.product.api.dto.DtoCategoryIn;
+import com.product.api.dto.in.DtoProductIn;
 import com.product.api.entity.Category;
 import com.product.api.service.SvcCategory;
 import com.product.api.service.SvcCategoryImp;
+import com.product.api.service.SvcProduct;
 import com.product.common.dto.ApiResponse;
 import com.product.exception.ApiException;
 
@@ -35,8 +37,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class CtrlCategory {
 	
 	
+	private final SvcCategory svc;
+	private final SvcProduct svc2;
+	
+	
 	@Autowired
-	SvcCategory svc;
+	public  CtrlCategory (SvcCategory svc,SvcProduct svc2) {
+		this.svc = svc;
+		this.svc2 = svc2;
+		
+	}
+	
+	
+	//Aqui platzi hace un contructor 
 	
 	@GetMapping
 	public ResponseEntity<List<Category>> getCategories() {
@@ -93,6 +106,37 @@ public class CtrlCategory {
 	public ResponseEntity<ApiResponse> disableCategory(@PathVariable Integer id) {
 		return svc.disableCategory(id);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//Este metodo es del CtrlProduct
+	@PostMapping("/extra")
+	public ResponseEntity<ApiResponse> createProduct_Category(@Valid @RequestBody DtoProductIn in, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			throw new ApiException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
+
+		return svc2.createProduct(in);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

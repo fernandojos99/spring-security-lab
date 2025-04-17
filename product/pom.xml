@@ -86,12 +86,21 @@
 	      <artifactId>spring-boot-starter-test</artifactId>
 	      <scope>test</scope>
 	    </dependency>
+	    
 	    <dependency>
 	      <groupId>org.springframework.security</groupId>
 	      <artifactId>spring-security-test</artifactId>
 	      <scope>test</scope>
 	    </dependency>
 				
+		
+		<!--Para utilizar el lombok que crea setters y getters automaticamente -->
+		<!-- usa la versión más reciente -->
+    	<dependency>
+	      <groupId>org.projectlombok</groupId>
+	      <artifactId>lombok</artifactId>
+	      <optional>true</optional>
+    	</dependency>
 		
 		
 		<!--Terminan las dependencias-->

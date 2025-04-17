@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import com.product.api.dto.in.DtoProductIn;
@@ -81,7 +82,9 @@ public class SvcProductImp implements SvcProduct{
 		}
 	}
 
+	
 	@Override
+	@Secured("ROLE_ADMIN")
 	public ResponseEntity<ApiResponse> createProduct(DtoProductIn in) {
 		try {
 			
