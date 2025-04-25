@@ -87,9 +87,17 @@ public class UserEntity {
 	    this.disable = disable;
 	}
 
-	
-	
-	
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", locked=" + locked +
+                ", disabled=" + disable +
+                ", roles=" + roles +
+                '}';
+    }
 }
 
 
