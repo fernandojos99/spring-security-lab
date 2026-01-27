@@ -31,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
-    //Va a capturar cada petición que llegue , este filtro la va a capturar y validada
+    //Va a capturar cada petición que llegue , este filtro la va a capturar y validara
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

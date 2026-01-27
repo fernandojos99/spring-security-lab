@@ -49,6 +49,7 @@ public class SecurityConfig {
 			//Vamos a autorizar la peticiones http
 			.authorizeHttpRequests()
 			.requestMatchers("api/auth/**").permitAll()
+			.requestMatchers("/error", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/info", "/actuator/health").permitAll()
 			.requestMatchers("/category/**").hasAnyRole("CUSTOMER","ADMIN")
 			.requestMatchers("product").hasRole("ADMIN")
 			//.requestMatchers(HttpMethod.GET,"/category/**").permitAll()

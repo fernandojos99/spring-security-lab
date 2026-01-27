@@ -1,6 +1,7 @@
 package com.product.api.controller;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.product.config.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Productos", description = "Control de productos")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
