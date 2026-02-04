@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import com.product.api.dto.in.LoginDto;
 import com.product.config.JwtUtil;
@@ -25,14 +23,17 @@ import com.product.config.JwtUtil;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-
+    private final PasswordEncoder passwordEncoder ;
     
     //este lo hicimos en SecurityConfig
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginDto loginDto) {
@@ -40,7 +41,9 @@ public class AuthController {
     	//Aqui creamos un token no autenticado del usuario y la contrasenia
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(
         																	loginDto.getUsername(), loginDto.getPassword());
-        //Autentificamos el usuario 
+
+        System.out.println("lo que recibo"+loginDto.getUsername()+loginDto.getPassword());
+        //Autentificamos el usuario
         // el metodo authenticationManager va al manager y de ahi al autheticationprovider y de ahi al userdetailService
         Authentication authentication = this.authenticationManager.authenticate(login);
         //si la respuesta es negativa , ya no continua y automaticamente lanza una respuesta de que el usuario no se puede 
@@ -57,4 +60,21 @@ public class AuthController {
         // es para crear la responseEntity
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwt).build();
     }
+
+
+
+
+
+
+    /**This controller shouldn't exist at production but
+     * help me to get a hash by bycript
+     * */
+    @GetMapping("/debug/hash")
+    public void printHash() {
+        String hash = passwordEncoder.encode("admin123");
+        System.out.println(hash);
+    }
+
+
+
 }
